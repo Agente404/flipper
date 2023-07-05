@@ -1,5 +1,7 @@
+param(
+    [string] $hook
+)
 $ProgressPreference = 'SilentlyContinue';
-param($hook)
 
 New-Item -Path $env:temp -ItemType Directory -Force;
 Set-Location $env:temp;
