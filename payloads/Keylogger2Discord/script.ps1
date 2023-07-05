@@ -1,6 +1,4 @@
 Do{
-    $RunTime = 60;
-    $TimesRun = 1;
     $getT = Get-Date;
     $end = $getT.addminutes($RunTime);
     
