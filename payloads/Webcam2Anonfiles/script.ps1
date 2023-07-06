@@ -8,7 +8,7 @@ function Start-WebcamRecorder{
       [string]$OutPath,
       [Parameter()]
       [ValidateNotNullOrEmpty()]
-      [int]$Length
+      [int]$RecordTime
     );
   
     if (-not $PSBoundParameters["OutPath"]){ $OutPath = "$env:temp\out.mp4" };
