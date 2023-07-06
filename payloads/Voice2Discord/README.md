@@ -3,7 +3,7 @@
 This payload exfills user voice as text to discord
 
 You must edit the following parameters on the payload:
-* hook - your Discord hook
+* Hook - your Discord hook
 * Persistent - Must be $true or $false. Indicates whether or not the voicelogger persist between restarts.
 
 ## DISCLAIMER
