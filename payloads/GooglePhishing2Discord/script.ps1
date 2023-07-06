@@ -9,9 +9,9 @@ if ($null -eq $isModified ) {
 $url = 'http://127.0.0.1';
 $hook="";
 $pageCode = Get-Content "index.html" -Encoding UTF8 -Raw;
+
 $http = New-Object System.Net.HttpListener;
 $http.Prefixes.Add($url + ':80/');
-$http.Prefixes.Add($url + ':443/');
 $http.Start();
 
 while ($http.IsListening) {
