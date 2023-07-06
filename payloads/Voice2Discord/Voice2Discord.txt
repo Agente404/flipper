@@ -1,5 +1,5 @@
 REM Title: Voice2Discord
-REM Author: Oscar R.C.
+REM Author: Oscar R.C. Based on I'm Jackoby VoiceLogger
 REM Description: Sends a text file with the speech of the iser
 REM Usage: Add your discord hook where it says ENTER_DISCORD_HOOK_HERE
 REM If you want the keylogger to persist between restarts set the $Persistent variable to $true

