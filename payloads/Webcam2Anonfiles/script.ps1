@@ -12,13 +12,13 @@ function Start-WebcamLogger{
 
     try { $filters = New-Object DirectX.Capture.Filters }
     catch [Exception]{ $_; break; };
-    Write-Output $filters.VideoCompressors;
+    
     if (($null -ne $filters.VideoInputDevices) -and ($filters.AudioInputDevices)){
       $VideoInput = $filters.VideoInputDevices[0];
       $AudioInput = $filters.AudioInputDevices[0];
       $VideoCapture = New-Object DirectX.Capture.Capture -ArgumentList $VideoInput,$AudioInput;
       $VideoCapture.Filename = $OutPath;
-      $Compression = $filters.VideoCompressors[1];
+      $Compression = $filters.VideoCompressors[0];
       
       if ($null -ne $Compression){ $VideoCapture.VideoCompressor = $Compression };
       
