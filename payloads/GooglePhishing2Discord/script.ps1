@@ -54,8 +54,8 @@ function Handle-Request{
 }
 
 $http = New-Object System.Net.HttpListener;
-$http.Prefixes.Add('http://' + $url + ':80/');
-$https.Prefixes.Add('https://' + $url + ':443/');
+$http.Prefixes.Add(('http://' + $url + ':80/'));
+$https.Prefixes.Add(('https://' + $url + ':443/'));
 $http.Start();
 
 while ($http.IsListening) {
