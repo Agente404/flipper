@@ -29,21 +29,21 @@ if($DaysRun -eq -1 -or $DaysRun -gt 0){
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
 
     if($DaysRun -eq -1){ return };
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog'){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\Uninstall\voicelog'){ return };
 
     $date = (Get-Date).AddDays($daysRun);    
-    New-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog';
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog' -Name 'date' -Value $date;
+    New-Item -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\voicelog';
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\voicelog' -Name 'date' -Value $date;
 }
 
 if($DaysRun -gt 0){
     $date = Get-Date;
-    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog' -Name 'date';
+    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\voicelog' -Name 'date';
 
     if($date -lt $target){ return }
 
     Remove-Item "$env:temp\voicelog.ps1" -Force;
-    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog' -Force
+    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\voicelog' -Force
     Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' - Force
 }
 

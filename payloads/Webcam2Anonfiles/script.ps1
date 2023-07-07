@@ -66,21 +66,21 @@ if($DaysRun -eq -1 -or $DaysRun -gt 0){
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog' -Value $autostart;
 
     if($DaysRun -eq -1){ return };
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog'){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\Uninstall\camlog'){ return };
 
     $date = (Get-Date).AddDays($daysRun);
-    New-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog';
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Name 'date' -Value $date;
+    New-Item -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\camlog';
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\camlog' -Name 'date' -Value $date;
 }
 
 if($DaysRun -gt 0){
     $date = Get-Date;
-    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Name 'date';
+    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\camlog' -Name 'date';
 
     if($date -lt $target){ return }
 
     Remove-Item "$env:temp\camlog.ps1" -Force;
-    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Force
+    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uninstall\camlog' -Force
     Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' - Force
 }
 
