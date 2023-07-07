@@ -18,7 +18,7 @@ function Handle-Request{
     [CmdletBinding()]
 	param (
 		[parameter(Position=0,Mandatory=$True)]
-		[System.Net.HttpListener]$listener,
+		[System.Net.HttpListener]$listener
 	);
 
     $context = $listner.GetContext();  
