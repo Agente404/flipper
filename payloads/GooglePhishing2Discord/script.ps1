@@ -12,7 +12,7 @@ if ($null -eq $isModified ) {
 
 $url = 'http://127.0.0.1';
 $hook="";
-$pageCode = Get-Content "gph.html" -Encoding UTF8 -Raw;
+$pageCode = Get-Content "$env:temp\gph.html" -Encoding UTF8 -Raw;
 
 function Handle-Request{    
     [CmdletBinding()]
