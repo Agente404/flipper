@@ -21,7 +21,7 @@ function Handle-Request{
 		[System.Net.HttpListener]$listener
 	);
 
-    $context = $listner.GetContext();  
+    $context = $listener.GetContext();  
      
     if ($context.Request.HttpMethod -eq 'GET' -and $context.Request.RawUrl -eq '/') {
         $buffer = [Text.Encoding]::UTF8.GetBytes($pageCode);
@@ -47,7 +47,7 @@ function Handle-Request{
         $context.Response.OutputStream.Write($buffer, 0, $buffer.length);
         $context.Response.Close();
 
-        $listner.Stop();
+        $listener.Stop();
     }
 }
 
