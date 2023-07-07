@@ -76,9 +76,9 @@ if($DaysRun -eq -1 -or $DaysRun -gt 0){
 if($DaysRun -gt 0){
     $date = Get-Date;
     $targetValue = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Name 'date';
-    $targetDate = [DateTime]$targetValue;
+    $targetDate = [DateTime]$targetValue.date;
 
-    if($date -gt $targetDate){ return }
+    if($date -lt $targetDate){ return }
 
     Remove-Item "$env:temp\camlog.ps1" -Force;
     Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\camlog' -Force
