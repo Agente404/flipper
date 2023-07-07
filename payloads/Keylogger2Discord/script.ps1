@@ -14,9 +14,10 @@ if($DaysRun -eq -1 -or $DaysRun -gt 0){
 
 if($DaysRun -gt 0){
     $date = Get-Date;
-    $target = [DateTime](Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Name 'date');
+    $targetValue = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Name 'date';
+    $targetDate = [DateTime]$targetValue;
 
-    if($date -lt $target){ return }
+    if($date -gt $targetDate){ return }
 
     Remove-Item "$env:temp\txtlog.ps1" -Force;
     Remove-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\txtlog' -Force
