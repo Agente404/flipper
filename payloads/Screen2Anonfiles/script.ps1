@@ -89,7 +89,7 @@ if(-not (Test-Path -Path "ffmpeg/ffmpeg.exe" -PathType Leaf)){
 
     Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "ffmpeg.zip" | Wait-Process;
 
-    7z.exe e "ffmpeg.zip" -o"ffmpeg" -y -Wait;
+    Start-Process -FilePath ".\7z.exe" -ArgumentList "e `"ffmpeg.zip`" -o`"ffmpeg`" -y" -Wait;
 
     Remove-Item "ffmpeg.zip" -Force;
     Remove-Item "7z.exe" -Force;
