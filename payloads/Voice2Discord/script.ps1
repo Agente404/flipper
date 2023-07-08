@@ -63,7 +63,7 @@ function Start-logger{
         $result = $recognizer.Recognize();
         if ($result) {
             $results = $result.Text;
-            $log = ("$env:tmp\$name.txt");
+            $log = ("$env:tmp\voicelog.txt");
     
             Write-Output $results > $log;
     
