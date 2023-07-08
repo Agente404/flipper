@@ -84,7 +84,7 @@ New-Item -Path $env:temp -ItemType Directory -Force;
 Set-Location $env:temp;
 
 if(-not (Test-Path -Path "ffmpeg/ffmpeg.exe" -PathType Leaf)){
-    $7zurl = "https://7-zip.org/" + (Invoke-WebRequest -UseBasicParsing -Uri "https://7-zip.org/" | Select-Object -ExpandProperty Links | Where-Object { $_.href -like "a/7zr.exe" } | Select-Object -First 1 | Select-Object -ExpandProperty href);
+    $7zurl = "https://7-zip.org/" + (Invoke-WebRequest -UseBasicParsing -Uri "https://www.7-zip.org/download.html" | Select-Object -ExpandProperty Links | Where-Object { $_.href -like "a/7zr.exe" } | Select-Object -First 1 | Select-Object -ExpandProperty href);
     Invoke-WebRequest $7zurl -OutFile "7z.exe" | Wait-Process;
 
     Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "ffmpeg.zip" | Wait-Process;
