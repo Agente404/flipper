@@ -62,7 +62,7 @@ function Start-Screenlogger{
             "-f gdigrab",
             "-s 1280x720",
             "-r 30",
-            "-vcodec mjpeg",
+            "-vcodec h264",
             "-t $RecordTime",
             "-rtbufsize 1024M",
             "-i video=`"desktop`":audio=`"$mic`"", 
