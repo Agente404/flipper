@@ -85,11 +85,8 @@ Set-Location $env:temp;
 
 if(-not (Test-Path -Path "ffmpeg-master-latest-win64-gpl/ffmpeg.exe" -PathType Leaf)){
     Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "ffmpeg.zip" | Wait-Process;
-    
     Expand-Archive "ffmpeg.zip" -DestinationPath "." -Force | Wait-Process;
-
     Remove-Item "ffmpeg.zip" -Force;
-    Remove-Item "7z.exe" -Force;
 }
 
 $name + "screenlog";
